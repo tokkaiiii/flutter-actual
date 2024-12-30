@@ -26,12 +26,6 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     final dio = Dio();
 
-    // localhost
-    final emulatorId = '10.0.2.2:3000';
-    final simulatorId = '127.0.0.1:3000';
-
-    final ip = Platform.isIOS ? simulatorId : emulatorId;
-
     return DefaultLayout(
       child: SingleChildScrollView(
         // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -114,16 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 TextButton(
                   onPressed: () async {
-                    final resp = await dio.post(
-                      'http://$ip/auth/token',
-                      options: Options(
-                        headers: {
-                          'authorization': 'Bearer ',
-                        },
-                      ),
-                    );
 
-                    print(resp.data);
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Colors.black,
