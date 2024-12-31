@@ -32,13 +32,6 @@ class ProductCard extends StatelessWidget {
     );
   }
 
-  /*Image.asset(
-  'asset/img/food/ddeok_bok_gi.jpg',
-  width: 110,
-  height: 110,
-  fit: BoxFit.cover,
-  )*/
-
   @override
   Widget build(BuildContext context) {
     return IntrinsicHeight(
