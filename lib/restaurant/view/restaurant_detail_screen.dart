@@ -14,7 +14,7 @@ class RestaurantDetailScreen extends StatelessWidget {
     super.key,
   });
 
-  Future<Map<String,dynamic>> getRestaurantDetail() async {
+  Future<Map<String, dynamic>> getRestaurantDetail() async {
     final dio = Dio();
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     final resp = await dio.get(
@@ -33,9 +33,9 @@ class RestaurantDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultLayout(
       title: '불타는 떡볶이',
-      child: FutureBuilder<Map<String,dynamic>>(
+      child: FutureBuilder<Map<String, dynamic>>(
         future: getRestaurantDetail(),
-        builder: (_, AsyncSnapshot<Map<String,dynamic>> snapshot) {
+        builder: (_, AsyncSnapshot<Map<String, dynamic>> snapshot) {
           if (!snapshot.hasData) {
             return Center(
               child: CircularProgressIndicator(),
@@ -48,7 +48,9 @@ class RestaurantDetailScreen extends StatelessWidget {
             slivers: [
               renderTop(model: item),
               renderLabel(),
-              renderProducts(),
+              renderProducts(
+                products: item.products,
+              ),
             ],
           );
         },
@@ -71,18 +73,23 @@ class RestaurantDetailScreen extends StatelessWidget {
     );
   }
 
-  renderProducts() {
+  renderProducts({
+    required List<RestaurantProductModel> products,
+  }) {
     return SliverPadding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
+            final model = products[index];
             return Padding(
               padding: const EdgeInsets.only(top: 16.0),
-              child: ProductCard(),
+              child: ProductCard.fromModel(
+                model: model,
+              ),
             );
           },
-          childCount: 10,
+          childCount: products.length,
         ),
       ),
     );
@@ -90,7 +97,7 @@ class RestaurantDetailScreen extends StatelessWidget {
 
   SliverToBoxAdapter renderTop({
     required RestaurantDetailModel model,
-}) {
+  }) {
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(
         model: model,
