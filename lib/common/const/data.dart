@@ -10,5 +10,3 @@ final emulatorId = '10.0.2.2:3000';
 final simulatorId = '127.0.0.1:3000';
 
 final ip = Platform.isIOS ? simulatorId : emulatorId;
-
-final storage = FlutterSecureStorage();

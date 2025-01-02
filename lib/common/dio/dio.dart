@@ -1,6 +1,17 @@
 import 'package:actual/common/const/data.dart';
+import 'package:actual/common/secure_storage/secure_storage.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final dioProvider = Provider<Dio>((ref){
+  final dio = Dio();
+  final storage = ref.watch(secureStorageProvider);
+
+  dio.interceptors.add(CustomInterceptor(storage: storage));
+  return dio;
+});
+
 
 class CustomInterceptor extends Interceptor {
   final FlutterSecureStorage storage;
@@ -13,7 +24,7 @@ class CustomInterceptor extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    print('[REQUEST] [${options.method}] ${options.uri}');
+    print('[REQUEST ] [${options.method}] ${options.uri}');
 
     if (options.headers['accessToken'] == 'true') {
       // 헤더 삭제
@@ -46,7 +57,7 @@ class CustomInterceptor extends Interceptor {
     // 401 에러가 났을때 (status code)
     // 토큰을 재발급 받는 시도를 하고 토큰이 재발급되면
     // 다시 새로운 토큰으로 요청을 한다.
-    print('[ERROR] [${err.requestOptions.method}] ${err.requestOptions.uri}');
+    print('[ERROR   ] [${err.requestOptions.method}] ${err.requestOptions.uri}');
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
 
     // refreshToken 없으면
